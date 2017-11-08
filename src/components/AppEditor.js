@@ -5,6 +5,7 @@ import debounce from "lodash/debounce";
 import { Editor, RichUtils, convertToRaw } from "draft-js";
 
 import { updateEditor } from "../actions/editor"; // actions
+import { Container } from "semantic-ui-react";
 
 const styleMap = (function() {
   return {
@@ -60,7 +61,7 @@ class AppEditor extends React.Component {
 
   render() {
     return (
-      <div className="editor-root" onClick={this.focus}>
+      <Container className="editor-root" onClick={this.focus}>
         {this.props.editors.byId[this.props.currentEditorId] ? (
           <Editor
             customStyleMap={styleMap}
@@ -73,7 +74,7 @@ class AppEditor extends React.Component {
             placeholder="Today, I want to..."
           />
         ) : null}
-      </div>
+      </Container>
     );
   }
 }

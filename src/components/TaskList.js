@@ -7,18 +7,23 @@ import { Item } from "semantic-ui-react";
 class TaskList extends React.Component {
   renderTasks = () => {
     const todayDate = new Date().toISOString().slice(0, 10);
-    return this.props.tasks.allIds
-      .filter(id => {
-        const task = this.props.tasks.byId[id];
-        debugger;
-        return (
-          task.status === false && task.createdAt.slice(0, 10) === todayDate
-        );
-      })
-      .map(id => {
-        const task = this.props.tasks.byId[id];
-        return <TaskItem key={id} task={task} id={id} />;
-      });
+    // const c = this.props.tasks.byId;
+    return this.props.tasks.allIds.length > 0
+      ? this.props.tasks.allIds
+          .filter(id => {
+            const task = this.props.tasks.byId[id];
+            if (!task.createdAt) {
+              debugger;
+            }
+            return (
+              task.status === false && task.createdAt.slice(0, 10) === todayDate
+            );
+          })
+          .map(id => {
+            const task = this.props.tasks.byId[id];
+            return <TaskItem key={id} task={task} id={id} />;
+          })
+      : null;
   };
   render() {
     return <Item.Group divided>{this.renderTasks()}</Item.Group>;

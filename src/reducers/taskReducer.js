@@ -15,21 +15,39 @@ const taskReducer = (state = defaultState, { payload, type }) => {
           createdAt: payload.created_at
         }
       };
-    case "ADD_TASK":
-      console.log("redux action: ", type, payload);
-      byId = {
-        ...state.tasks.byId,
-        [payload.id]: { content: payload.content, status: false }
-      };
-      const allIds = [...state.tasks.allIds, payload.id];
+      var allIds = [...state.tasks.allIds, payload.id];
       return {
         ...state,
         tasks: { byId, allIds }
       };
-    case "COMPLETE_TASK":
+    case "ADD_TASK":
       console.log("redux action: ", type, payload);
+      byId = {
+        ...state.tasks.byId,
+        [payload.id]: {
+          content: payload.content,
+          status: payload.status,
+          createdAt: payload.created_at
+        }
+      };
+      allIds = [...state.tasks.allIds, payload.id];
+      return {
+        ...state,
+        tasks: { byId, allIds }
+      };
+    case "ADD_TASK_TO_EDITOR":
+      console.log("redux action: ", type, payload);
+      byId = {
+        ...state.tasks.byId,
+        [payload.id]: {
+          content: payload.content,
+          status: payload.status,
+          createdAt: payload.created_at
+        }
+      };
+      allIds = [...state.tasks.allIds, payload.id];
 
-      return state;
+      return { ...state, tasks: { byId, allIds } };
     default:
       return state;
   }

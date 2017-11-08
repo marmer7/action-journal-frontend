@@ -3,22 +3,29 @@ import { OrderedSet } from "immutable";
 
 export function addTaskToEndOfEditor(editorState, task) {
   let contentState = editorState.getCurrentContent();
-  const endSelection = getEndSelection(contentState);
   const txt = task.content;
   console.log(txt);
-  contentState = contentState.createEntity("task", "IMMUTABLE", {
+  contentState = contentState.createEntity("TASK", "IMMUTABLE", {
     taskId: task.id
   });
   const entityKey = contentState.getLastCreatedEntityKey();
 
-  const nextContentState = Modifier.insertText(
+  const withEntity = Modifier.insertText(
     contentState,
-    endSelection,
+    getEndSelection(contentState),
     txt,
     OrderedSet.of("immutable"),
     entityKey
   );
-  return EditorState.push(editorState, nextContentState, "insert-characters");
+
+  const withBlank = Modifier.insertText(
+    withEntity,
+    getEndSelection(withEntity),
+    " ",
+    null,
+    null
+  );
+  return EditorState.push(editorState, withBlank, "insert-characters");
 }
 
 function getEndSelection(contentState) {
