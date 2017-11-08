@@ -27,23 +27,6 @@
   justify-content: center;
 }
 
-/*.navbar {
-  border: 1px solid #fff;
-  width: 900px;
-  display: flex;
-  justify-content: space-between;
-}
-.links {
-  border: 1px solid #fff;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.login,
-.signup {
-  margin-left: 20px;
-}*/
-
 /*app container styling*/
 .app-container {
   border: 1px solid #fff;
@@ -63,6 +46,9 @@
   flex: 2;
   margin-left: 2%;
   height: 100%;
+  margin: 50px auto;
+  padding: 10px;
+  font-size: 18px;
 }
 
 .DraftEditor-root {

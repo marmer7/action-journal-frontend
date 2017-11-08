@@ -3,8 +3,13 @@ import { connect } from "react-redux";
 // import { OrderedSet } from "immutable";
 import debounce from "lodash/debounce";
 import { Editor, RichUtils, convertToRaw } from "draft-js";
-
-import { updateEditor } from "../actions/editor"; // actions
+import SideToolbar from "./SideToolbar";
+// actions
+import { updateEditor } from "../actions/editor";
+import {
+  getSelectionRange,
+  getSelectedBlockElement
+} from "../helpers/selection";
 import { Container } from "semantic-ui-react";
 
 const styleMap = (function() {
@@ -19,6 +24,7 @@ const styleMap = (function() {
 })();
 
 class AppEditor extends React.Component {
+  state = {};
   saveContent = debounce(content => {
     fetch(
       `http://localhost:3000/api/v1/editors/${this.props.currentEditorId}`,
@@ -37,6 +43,28 @@ class AppEditor extends React.Component {
       .then(editorData => this.props.onSaveEditorState(editorData));
   }, 1000);
 
+  onChange = editorState => {
+    const contentState = editorState.getCurrentContent();
+    this.saveContent(contentState);
+    this.props.onSaveEditorState(editorState, this.props.currentEditorId);
+    setTimeout(this.updateSelection, 0);
+  };
+
+  currentEditor = () => {
+    return this.props.editors.byId[this.props.currentEditorId].editorState;
+  };
+
+  focus = () => this.refs.editor.focus();
+
+  updateSelection = () => {
+    const selectionRange = getSelectionRange();
+    let selectedBlock;
+    if (selectionRange) {
+      selectedBlock = getSelectedBlockElement(selectionRange);
+    }
+    this.setState({ selectedBlock, selectionRange });
+  };
+
   handleKeyCommand = command => {
     console.log(command);
     const newState = RichUtils.handleKeyCommand(this.currentEditor(), command);
@@ -47,27 +75,50 @@ class AppEditor extends React.Component {
     return "not-handled";
   };
 
-  onChange = editorState => {
-    const contentState = editorState.getCurrentContent();
-    this.saveContent(contentState);
-    this.props.onSaveEditorState(editorState, this.props.currentEditorId);
+  toggleBlockType = blockType => {
+    this.onChange(
+      RichUtils.toggleBlockType(
+        this.props.editors.byId[this.props.currentEditorId].editorState,
+        blockType
+      )
+    );
   };
 
-  currentEditor = () => {
-    return this.props.editors.byId[this.props.currentEditorId].editorState;
+  blockStyler = block => {
+    if (block.getType() === "unstyled") {
+      return "paragraph";
+    }
+    return null;
   };
-
-  focus = () => this.refs.editor.focus();
 
   render() {
+    const { selectedBlock, selectionRange } = this.state;
+    let sideToolbarOffsetTop = 0;
+    if (selectedBlock) {
+      const editor = document.getElementById("richEditor");
+      const editorBounds = editor.getBoundingClientRect();
+      const blockBounds = selectedBlock.getBoundingClientRect();
+
+      sideToolbarOffsetTop = blockBounds.bottom - editorBounds.top - 31;
+    }
     return (
-      <Container className="editor-root" onClick={this.focus}>
+      <Container className="editor" id="richEditor" onClick={this.focus}>
+        {selectedBlock ? (
+          <SideToolbar
+            editorState={
+              this.props.editors.byId[this.props.currentEditorId].editorState
+            }
+            style={{ top: sideToolbarOffsetTop }}
+            onToggle={this.toggleBlockType}
+          />
+        ) : null}
         {this.props.editors.byId[this.props.currentEditorId] ? (
           <Editor
             customStyleMap={styleMap}
             editorState={
               this.props.editors.byId[this.props.currentEditorId].editorState
             }
+            blockStyleFn={this.blockStyler}
             onChange={this.onChange}
             handleKeyCommand={this.handleKeyCommand}
             ref="editor"
