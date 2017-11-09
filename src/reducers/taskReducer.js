@@ -5,7 +5,7 @@ const defaultState = {
 const taskReducer = (state = defaultState, { payload, type }) => {
   switch (type) {
     case "IMPORT_TASK":
-      console.log("redux action: ", type, payload);
+      // console.log("redux action: ", type, payload);
       var byId = {
         ...state.tasks.byId,
         [payload.id]: {
