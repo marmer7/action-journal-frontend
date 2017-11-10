@@ -19,10 +19,6 @@
   height: 100%;
 }
 
-/*.ui.secondary.navbar-container.menu {
-  margin-left: 2% !important;
-}*/
-
 .item.date {
   margin-left: 2% !important;
 }
@@ -80,6 +76,8 @@
 
 .editor .public-DraftEditor-content {
   min-height: 100px;
+  max-height: 450px;
+  overflow: auto;
 }
 
 .editor .public-DraftStyleDefault-pre {

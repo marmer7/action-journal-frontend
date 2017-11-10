@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, Menu } from "semantic-ui-react";
+import { Menu } from "semantic-ui-react";
 
 const NavBar = props => {
   const date = new Date().toDateString();

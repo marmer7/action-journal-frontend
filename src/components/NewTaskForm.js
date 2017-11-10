@@ -6,17 +6,25 @@ import { Input } from "semantic-ui-react";
 
 class NewTaskForm extends React.Component {
   state = {
-    content: ""
+    content: "",
+    invalidEntry: false
   };
 
   onChange = event => {
     this.setState({ [event.target.name]: event.target.value });
+    if (this.state.invalidEntry) {
+      this.setState({ invalidEntry: false });
+    }
   };
   onSubmit = event => {
     event.preventDefault();
-    const content = { content: this.state.content };
-    this.props.onTaskSubmit(content);
-    this.setState({ content: "" });
+    if (this.state.content.trim()) {
+      const content = { content: this.state.content };
+      this.props.onTaskSubmit(content);
+      this.setState({ content: "" });
+    } else {
+      this.setState({ content: "", invalidEntry: true });
+    }
   };
 
   render() {
@@ -25,6 +33,7 @@ class NewTaskForm extends React.Component {
         <form onSubmit={this.onSubmit}>
           <Input
             fluid
+            error={this.state.invalidEntry}
             action={{
               color: "teal",
               labelPosition: "right",
@@ -32,7 +41,9 @@ class NewTaskForm extends React.Component {
               content: "Add"
             }}
             type="text"
-            placeholder="Today, I want to..."
+            placeholder={
+              !this.state.invalidEntry ? "Today, I want to..." : "Invalid Entry"
+            }
             value={this.state.content}
             onChange={this.onChange}
             name="content"
