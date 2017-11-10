@@ -1,12 +1,12 @@
 import { EditorState, SelectionState, Modifier } from "draft-js";
 import { OrderedSet } from "immutable";
-import tensify from "tensify";
+// import tensify from "tensify";
+import ConvertTense from "./convertTense";
 
 export function addTaskToEndOfEditor(editorState, task) {
   let contentState = editorState.getCurrentContent();
   var txt = task.content;
   txt = formatText(contentState, txt);
-  console.log(txt);
   contentState = contentState.createEntity("TASK", "IMMUTABLE", {
     taskId: task.id
   });
@@ -48,26 +48,22 @@ function getEndSelection(contentState) {
 
 function formatText(contentState, txt) {
   const txtArray = txt.split(" ");
-  console.log(tensify(txtArray[0]).past);
-  const formattedTxt = [
-    tensify(txtArray[0].toLowerCase()).past,
-    ...txtArray.slice(1)
-  ].join(" ");
+  const past = new ConvertTense(txtArray[0]).past;
+  const formattedTxt = [past, ...txtArray.slice(1)].join(" ");
   if (!contentState.hasText()) {
     return "Today, I ".concat(formattedTxt);
   }
   const plainText = contentState.getPlainText();
   const plainTextLength = plainText.trim().length;
 
-  const periodRe = new RegExp("\\.");
-  const andRe = new RegExp("and");
+  const periodRe = /\./;
+  const andRe = /and/;
 
-  const periodIndex = plainText.search(periodRe);
-  const andIndex = plainText.search(andRe);
+  const lastSentence = plainText.split(".").slice(-1)[0];
+  // const periodIndex = lastSentence.search(periodRe);
+  // const andIndex = lastSentence.search(andRe);
 
-  if (periodIndex >= plainTextLength - 1) {
-    return ` I ${formattedTxt}`;
-  } else if (andIndex > periodIndex) {
+  if (lastSentence.length === 0) {
     return ` I ${formattedTxt}`;
   } else {
     return ` and ${formattedTxt}.`;
