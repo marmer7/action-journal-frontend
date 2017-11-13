@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 
 const NavBar = props => {
   const date = new Date().toDateString();
+
   return (
     <Menu secondary className="navbar-container">
       <NavLink to="/">
@@ -13,8 +14,12 @@ const NavBar = props => {
         <NavLink to="/journals">
           <Menu.Item name="journals" className="date" />
         </NavLink>
-        <Menu.Item name="sign up" className="singup" />
-        <Menu.Item name="log in" className="login" />
+        <NavLink to="/">
+          <Menu.Item name="sign up" className="singup" />
+        </NavLink>
+        <NavLink to="/">
+          <Menu.Item name="log in" className="login" />
+        </NavLink>
       </Menu.Menu>
     </Menu>
   );

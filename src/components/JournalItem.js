@@ -3,6 +3,19 @@ import { connect } from "react-redux";
 import { Editor, RichUtils, convertToRaw } from "draft-js";
 import debounce from "lodash/debounce";
 import { updateEditor } from "../actions/editor"; // actions
+import BlockStyleControls from "./BlockStyleControls";
+import { Container } from "semantic-ui-react";
+
+const styleMap = (function() {
+  return {
+    immutable: {
+      backgroundColor: "rgba(24,28,99,0.2)"
+    },
+    none: {
+      backgroundColor: "#FFF"
+    }
+  };
+})();
 
 class JournalItem extends React.Component {
   saveContent = debounce(content => {
@@ -24,20 +37,58 @@ class JournalItem extends React.Component {
   onChange = editorState => {
     const contentState = editorState.getCurrentContent();
     this.saveContent(contentState);
-    console.log(this.props.match.params.id);
     this.props.onSaveEditorState(
       editorState,
       parseInt(this.props.match.params.id)
     );
   };
 
+  toggleBlockType = blockType => {
+    this.onChange(
+      RichUtils.toggleBlockType(this.props.editor.editorState, blockType)
+    );
+  };
+
+  handleKeyCommand = command => {
+    console.log(command);
+    const newState = RichUtils.handleKeyCommand(
+      this.props.editor.editorState,
+      command
+    );
+    if (newState) {
+      this.props.onSaveEditorState(
+        newState,
+        parseInt(this.props.match.params.id)
+      );
+      return "handled";
+    }
+    return "not-handled";
+  };
+
+  focus = () => this.refs.editor.focus();
+
   render() {
-    console.log(this.props);
     return (
-      <Editor
-        editorState={this.props.editor.editorState}
-        onChange={this.onChange}
-      />
+      <div id="edit-container">
+        <Container className="editor-root">
+          <h1>{new Date(this.props.editor.createdAt).toDateString()}</h1>
+          <BlockStyleControls
+            editorState={this.props.editor.editorState}
+            onToggle={this.toggleBlockType}
+          />
+          <div className="editor" onClick={this.focus}>
+            <Editor
+              customStyleMap={styleMap}
+              editorState={this.props.editor.editorState}
+              onChange={this.onChange}
+              handleKeyCommand={this.handleKeyCommand}
+              placeholder="Today, I..."
+              ref="editor"
+              spellCheck={true}
+            />
+          </div>
+        </Container>
+      </div>
     );
   }
 }

@@ -33,9 +33,13 @@ class AppEditor extends React.Component {
           "Content-Type": "application/json"
         }
       }
-    )
-      .then(res => res.json())
-      .then(editorData => this.props.onSaveEditorState(editorData));
+    ).then(res => res.json());
+    // .then(editorData =>
+    //   this.props.onSaveEditorState(
+    //     editorData.raw_content_state,
+    //     editorData.id
+    //   )
+    // );
   }, 1000);
 
   handleKeyCommand = command => {

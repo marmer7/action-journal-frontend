@@ -104,3 +104,26 @@
 .editor-activeButton {
   color: #5890ff;
 }
+
+.journals-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.journal-item {
+  border: 1px solid black;
+  width: 200px;
+  height: 100px;
+  margin: 7px 7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#edit-container {
+  display: flex;
+  height: 80%;
+  justify-content: center;
+}

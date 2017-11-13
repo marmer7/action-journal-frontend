@@ -28,6 +28,7 @@ class AppContainer extends React.Component {
           // console.log(convertToRaw(contentState));
           this.props.createEditor(contentState);
         } else {
+          console.log("setting editor");
           this.props.setCurrentEditor(editorData);
         }
       });
