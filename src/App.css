@@ -19,11 +19,11 @@
   height: 100%;
 }
 
-.item.date {
+.a .item.date {
   margin-left: 2% !important;
 }
 
-.right.menu {
+.a .right.menu {
   margin-right: 2% !important;
 }
 

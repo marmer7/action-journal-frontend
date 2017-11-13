@@ -12,11 +12,9 @@ class TaskList extends React.Component {
       ? this.props.tasks.allIds
           .filter(id => {
             const task = this.props.tasks.byId[id];
-            if (!task.createdAt) {
-              debugger;
-            }
             return (
-              task.status === false && task.createdAt.slice(0, 10) === todayDate
+              task.status === false
+              // && task.createdAt.slice(0, 10) === todayDate
             );
           })
           .map(id => {

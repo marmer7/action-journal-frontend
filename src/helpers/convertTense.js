@@ -195,9 +195,12 @@ export default class ConvertTense {
       console.log("4");
       return this.verb + "ed";
     }
+    if (/[aeiou][a-z]*[aeiou][bdglmnprst]$/i.test(this.verb)) {
+      return this.verb + "ed";
+    }
     if (/[aeiou][bdglmnprst]$/i.test(this.verb)) {
       console.log("5");
-      return this.verb.replace(/(.+[aeiou])([bdglmnprst])/, "$1$2$2ed");
+      return this.verb.replace(/(\w+[aeiou])([bdglmnprst])/, "$1$2$2ed");
     }
     if (/[a-z]*[^ao]y$/i.test(this.verb)) {
       console.log("6");

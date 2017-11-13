@@ -15,7 +15,7 @@ const taskReducer = (state = defaultState, { payload, type }) => {
           createdAt: payload.created_at
         }
       };
-      var allIds = [...state.tasks.allIds, payload.id];
+      var allIds = new Set([...state.tasks.allIds, payload.id]);
       return {
         ...state,
         tasks: { byId, allIds }

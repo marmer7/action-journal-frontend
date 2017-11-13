@@ -5,6 +5,7 @@ import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
+import NavBar from "./components/NavBar";
 import App from "./App";
 import editorReducer from "./reducers/editorReducer";
 import taskReducer from "./reducers/taskReducer";
