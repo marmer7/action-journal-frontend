@@ -16,7 +16,7 @@ class App extends Component {
           <Route exact path="/" component={AppContainer} />
           <Route exact path="/journals" component={Journals} />
           <Route path="/journals/:id" component={JournalItem} />
-          <Redirect path="/" />
+          <Redirect to="/" />
         </Switch>
       </div>
     );

@@ -7,9 +7,11 @@ const NavBar = props => {
 
   return (
     <Menu secondary className="navbar-container">
-      <NavLink to="/">
-        <Menu.Item name={date} className="date" />
-      </NavLink>
+      <Menu.Menu position="left">
+        <NavLink to="/">
+          <Menu.Item name={date} className="date" />
+        </NavLink>
+      </Menu.Menu>
       <Menu.Menu position="right">
         <NavLink to="/journals">
           <Menu.Item name="journals" className="date" />

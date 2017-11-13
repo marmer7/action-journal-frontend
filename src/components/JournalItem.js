@@ -39,7 +39,7 @@ class JournalItem extends React.Component {
     this.saveContent(contentState);
     this.props.onSaveEditorState(
       editorState,
-      parseInt(this.props.match.params.id)
+      parseInt(this.props.match.params.id, 10)
     );
   };
 
@@ -58,7 +58,7 @@ class JournalItem extends React.Component {
     if (newState) {
       this.props.onSaveEditorState(
         newState,
-        parseInt(this.props.match.params.id)
+        parseInt(this.props.match.params.id, 10)
       );
       return "handled";
     }

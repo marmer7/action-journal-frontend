@@ -54,10 +54,10 @@ function formatText(contentState, txt) {
     return "Today, I ".concat(formattedTxt);
   }
   const plainText = contentState.getPlainText();
-  const plainTextLength = plainText.trim().length;
-
-  const periodRe = /\./;
-  const andRe = /and/;
+  // const plainTextLength = plainText.trim().length;
+  //
+  // const periodRe = /\./;
+  // const andRe = /and/;
 
   const lastSentence = plainText.split(".").slice(-1)[0];
   // const periodIndex = lastSentence.search(periodRe);
@@ -68,5 +68,4 @@ function formatText(contentState, txt) {
   } else {
     return ` and ${formattedTxt}.`;
   }
-  return formattedTxt;
 }

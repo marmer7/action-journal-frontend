@@ -6,8 +6,7 @@ import { Item } from "semantic-ui-react";
 
 class TaskList extends React.Component {
   renderTasks = () => {
-    const todayDate = new Date().toISOString().slice(0, 10);
-    // const c = this.props.tasks.byId;
+    // const todayDate = new Date().toISOString().slice(0, 10);
     return this.props.tasks.allIds.length > 0
       ? this.props.tasks.allIds
           .filter(id => {
