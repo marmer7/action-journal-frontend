@@ -3,18 +3,14 @@ import { connect } from "react-redux";
 import AppEditor from "./AppEditor";
 import TaskContainer from "./TaskContainer";
 import { EditorState } from "draft-js";
-import { createEditor } from "../actions/editor";
+import { createEditor, addEditor, setCurrentEditor } from "../actions/editor";
 
 class AppContainer extends React.Component {
   componentDidMount() {
     const todayDate = new Date().toISOString().slice(0, 10);
-    fetch("http://localhost:3000/api/v1/tasks")
-      .then(res => res.json())
-      .then(tasks => {
-        tasks.forEach(task => {
-          this.props.importTask(task);
-        });
-      });
+    // add to reducer use thunk
+    // put this in separate files
+    /// if you're going to use redux within reason use it every where
 
     fetch("http://localhost:3000/api/v1/show_last_editor")
       .then(res => res.json())
@@ -29,7 +25,8 @@ class AppContainer extends React.Component {
           this.props.createEditor(contentState);
         } else {
           console.log("setting editor");
-          this.props.setCurrentEditor(editorData);
+          this.props.addEditor(editorData);
+          this.props.setCurrentEditor(editorData.id);
         }
       });
   }
@@ -48,15 +45,17 @@ const mapStateToProps = state => ({
   currentEditorId: state.editorReducer.currentEditorId
 });
 
+// use bind action creators
 const mapDispatchToProps = dispatch => ({
-  setCurrentEditor: editorData => {
-    dispatch({ type: "SET_CURRENT_EDITOR", payload: editorData });
+  setCurrentEditor: id => {
+    /// where is the action creator
+    dispatch(setCurrentEditor(id));
   },
   createEditor: editorState => {
     dispatch(createEditor(editorState));
   },
-  importTask: task => {
-    dispatch({ type: "IMPORT_TASK", payload: task });
+  addEditor: editorData => {
+    dispatch(addEditor(editorData));
   }
 });
 

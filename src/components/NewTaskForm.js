@@ -34,12 +34,7 @@ class NewTaskForm extends React.Component {
           <Input
             fluid
             error={this.state.invalidEntry}
-            action={{
-              color: "teal",
-              labelPosition: "right",
-              icon: "pencil square",
-              content: "Add"
-            }}
+            action="+"
             type="text"
             placeholder={
               !this.state.invalidEntry ? "Today, I want to..." : "Invalid Entry"

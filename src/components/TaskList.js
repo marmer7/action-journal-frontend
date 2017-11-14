@@ -27,6 +27,7 @@ class TaskList extends React.Component {
   }
 }
 
+// Look up selectors in redux
 const mapStateToProps = state => ({ tasks: state.taskReducer.tasks });
 
 export default connect(mapStateToProps, null)(TaskList);

@@ -1,12 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 // import { OrderedSet } from "immutable";
-import debounce from "lodash/debounce";
-import { Editor, RichUtils, convertToRaw } from "draft-js";
-
+import { Editor, RichUtils } from "draft-js";
 import { updateEditor } from "../actions/editor"; // actions
+import { uncompleteTask } from "../actions/task"; // actions
 import BlockStyleControls from "./BlockStyleControls";
 import { Container } from "semantic-ui-react";
+import { saveContent } from "../helpers/fetches";
 
 const styleMap = (function() {
   return {
@@ -20,31 +20,29 @@ const styleMap = (function() {
 })();
 
 class AppEditor extends React.Component {
-  saveContent = debounce(content => {
-    fetch(
-      `http://localhost:3000/api/v1/editors/${this.props.currentEditorId}`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          content: convertToRaw(content)
-        }),
-        headers: {
-          Application: "application/json",
-          "Content-Type": "application/json"
-        }
-      }
-    ).then(res => res.json());
-    // .then(editorData =>
-    //   this.props.onSaveEditorState(
-    //     editorData.raw_content_state,
-    //     editorData.id
-    //   )
-    // );
-  }, 1000);
-
   handleKeyCommand = command => {
-    console.log(command);
-    const newState = RichUtils.handleKeyCommand(this.currentEditor(), command);
+    if (command === "backspace") {
+      const editorState = this.currentEditorState();
+      const selection = editorState.getSelection();
+
+      const startKey = selection.getStartKey();
+      const endOffset = selection.getEndOffset();
+      const selectedBlock = editorState
+        .getCurrentContent()
+        .getBlockForKey(startKey);
+      const prevEntityKey = selectedBlock.getEntityAt(endOffset - 1);
+      if (prevEntityKey) {
+        const id = editorState
+          .getCurrentContent()
+          .getEntity(prevEntityKey)
+          .get("data").taskId;
+        this.props.uncompleteTask(id);
+      }
+    }
+    const newState = RichUtils.handleKeyCommand(
+      this.currentEditorState(),
+      command
+    );
     if (newState) {
       this.props.onSaveEditorState(newState, this.props.currentEditorId);
       return "handled";
@@ -53,16 +51,18 @@ class AppEditor extends React.Component {
   };
 
   toggleBlockType = blockType => {
-    this.onChange(RichUtils.toggleBlockType(this.currentEditor(), blockType));
+    this.onChange(
+      RichUtils.toggleBlockType(this.currentEditorState(), blockType)
+    );
   };
 
   onChange = editorState => {
     const contentState = editorState.getCurrentContent();
-    this.saveContent(contentState);
+    saveContent(contentState, this.props.currentEditorId);
     this.props.onSaveEditorState(editorState, this.props.currentEditorId);
   };
 
-  currentEditor = () => {
+  currentEditorState = () => {
     try {
       return this.props.editors.byId[this.props.currentEditorId].editorState;
     } catch (err) {
@@ -73,7 +73,7 @@ class AppEditor extends React.Component {
   focus = () => this.refs.editor.focus();
   onTab = e => {
     const maxDepth = 4;
-    this.onChange(RichUtils.onTab(e, this.currentEditor(), maxDepth));
+    this.onChange(RichUtils.onTab(e, this.currentEditorState(), maxDepth));
   };
 
   render() {
@@ -82,7 +82,7 @@ class AppEditor extends React.Component {
         {this.props.editors.byId[this.props.currentEditorId] ? (
           <div>
             <BlockStyleControls
-              editorState={this.currentEditor()}
+              editorState={this.currentEditorState()}
               onToggle={this.toggleBlockType}
             />
             <div className="editor" onClick={this.focus}>
@@ -115,6 +115,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   onSaveEditorState: (editorState, id) => {
     dispatch(updateEditor(editorState, id));
+  },
+  uncompleteTask: id => {
+    dispatch(uncompleteTask({ id }));
   }
 });
 

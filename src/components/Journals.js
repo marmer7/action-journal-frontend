@@ -1,16 +1,17 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { addEditor } from "../actions/editor";
+import JournalItem from "./JournalItem";
 
 class Journals extends React.Component {
   renderJournals = () => {
     return this.props.editors.allIds.map(id => {
       return (
-        <Link to={`/journals/${id}`}>
-          <div className="journal-item">
-            {this.props.editors.byId[id].createdAt.slice(0, 10)}{" "}
-          </div>
-        </Link>
+        <JournalItem
+          id={id}
+          key={id}
+          date={this.props.editors.byId[id].createdAt}
+        />
       );
     });
   };
@@ -29,22 +30,6 @@ class Journals extends React.Component {
         <div className="journal-item">DATE</div>
         <div className="journal-item">DATE</div>
         <div className="journal-item">DATE</div>
-        <div className="journal-item">DATE</div>
-        <div className="journal-item">DATE</div>
-        <div className="journal-item">DATE</div>
-        <div className="journal-item">DATE</div>
-        <div className="journal-item">DATE</div>
-        <div className="journal-item">DATE</div>
-        <div className="journal-item">DATE</div>
-        <div className="journal-item">DATE</div>
-        <div className="journal-item">DATE</div>
-        <div className="journal-item">DATE</div>
-        <div className="journal-item">DATE</div>
-        <div className="journal-item">DATE</div>
-        <div className="journal-item">DATE</div>
-        <div className="journal-item">DATE</div>
-        <div className="journal-item">DATE</div>
-        <div className="journal-item">DATE</div>
       </div>
     );
   }
@@ -56,7 +41,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   addEditor: editorData => {
-    dispatch({ type: "ADD_EDITOR", payload: editorData });
+    dispatch(addEditor(editorData));
   }
 });
 

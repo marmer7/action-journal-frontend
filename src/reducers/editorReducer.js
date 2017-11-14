@@ -1,5 +1,6 @@
 import { EditorState, convertFromRaw } from "draft-js";
 import { addTaskToEndOfEditor } from "../helpers/addTextToEditor";
+import { saveContent } from "../helpers/fetches";
 
 const defaultState = {
   editors: { byId: {}, allIds: [] },
@@ -10,23 +11,25 @@ const editorReducer = (state = defaultState, { payload, type }) => {
   switch (type) {
     case "ADD_EDITOR":
       var allIds = [...state.editors.allIds];
-      if (!state.editors.allIds.includes(payload.id)) {
-        allIds = [...state.editors.allIds, payload.id];
+      var id = parseInt(payload.id, 10);
+      if (!state.editors.allIds.includes(id)) {
+        allIds = [...state.editors.allIds, id];
       }
       return {
         ...state,
-        editors: { byId: returnById(state, payload), allIds },
-        currentEditorId: payload.id
+        editors: { byId: returnById(state, payload), allIds }
       };
     case "ADD_TASK_TO_EDITOR":
       const editorState = addTaskToEndOfEditor(
         state.editors.byId[state.currentEditorId].editorState,
         payload
       );
+      saveContent(editorState.getCurrentContent(), state.currentEditorId);
       return {
         ...state,
         editors: {
           byId: {
+            ...state.editors.byId,
             [state.currentEditorId]: {
               editorState,
               createdAt: state.editors.byId[state.currentEditorId].createdAt
@@ -50,13 +53,14 @@ const editorReducer = (state = defaultState, { payload, type }) => {
       };
     case "SET_CURRENT_EDITOR":
       allIds = [...state.editors.allIds];
-      if (!state.editors.allIds.includes(payload.id)) {
-        allIds = [...state.editors.allIds, payload.id];
+      id = parseInt(payload.id, 10);
+      if (!state.editors.allIds.includes(id)) {
+        allIds = [...state.editors.allIds, id];
       }
       return {
         ...state,
-        editors: { byId: returnById(state, payload), allIds },
-        currentEditorId: payload.id
+        editors: { ...state.editors, allIds },
+        currentEditorId: id
       };
     default:
       return state;

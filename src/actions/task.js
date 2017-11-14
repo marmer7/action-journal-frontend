@@ -39,3 +39,37 @@ export function completeTask(task) {
       );
   };
 }
+
+export function uncompleteTask(task) {
+  return dispatch => {
+    fetch(`http://localhost:3000/api/v1/tasks/${task.id}`, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      method: "POST",
+      body: JSON.stringify(task)
+    })
+      .then(res => res.json())
+      .then(task =>
+        dispatch({
+          type: "IMPORT_TASK",
+          payload: task
+        })
+      );
+  };
+}
+
+export function importTask(task) {
+  return { type: "IMPORT_TASK", payload: task };
+}
+
+export function fetchTasks() {
+  return dispatch => {
+    fetch("http://localhost:3000/api/v1/tasks")
+      .then(res => res.json())
+      .then(tasks => {
+        tasks.forEach(task => dispatch(importTask(task)));
+      });
+  };
+}
