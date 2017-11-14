@@ -60,6 +60,24 @@ export function uncompleteTask(task) {
   };
 }
 
+export function deleteTask(task) {
+  return dispatch => {
+    fetch(`http://localhost:3000/api/v1/tasks/${task.id}`, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      method: "DELETE"
+    })
+      .then(res => res.json())
+      .then(task => dispatch(removeTask(task)));
+  };
+}
+
+export function removeTask(task) {
+  return { type: "REMOVE_TASK", payload: task };
+}
+
 export function importTask(task) {
   return { type: "IMPORT_TASK", payload: task };
 }

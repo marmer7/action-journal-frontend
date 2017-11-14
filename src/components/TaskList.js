@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import TaskItem from "./TaskItem";
-import { Item } from "semantic-ui-react";
+import { List } from "semantic-ui-react";
 // TODO: map through all tasks and render as task items
 
 class TaskList extends React.Component {
@@ -23,7 +23,11 @@ class TaskList extends React.Component {
       : null;
   };
   render() {
-    return <Item.Group divided>{this.renderTasks()}</Item.Group>;
+    return (
+      <List divided verticalAlign="middle">
+        {this.renderTasks()}
+      </List>
+    );
   }
 }
 

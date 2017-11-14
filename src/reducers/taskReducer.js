@@ -48,6 +48,14 @@ const taskReducer = (state = defaultState, { payload, type }) => {
         ...state,
         tasks: { byId, allIds: normalizeAllIds(state, payload.id) }
       };
+    case "REMOVE_TASK":
+      byId = { ...state.tasks.byId };
+      delete byId[payload.id];
+      var allIds = Object.keys(byId);
+      return {
+        ...state,
+        tasks: { byId, allIds }
+      };
     default:
       return state;
   }

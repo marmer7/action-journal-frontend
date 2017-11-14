@@ -1,29 +1,41 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Item, Button } from "semantic-ui-react";
-import { completeTask } from "../actions/task";
+import { List, Button, Icon } from "semantic-ui-react";
+import { completeTask, deleteTask } from "../actions/task";
 
 class TaskItem extends React.Component {
   completeTask = () => {
     const task = { content: this.props.task.content, id: this.props.id };
     this.props.completeTask(task);
   };
+
+  deleteTask = () => {
+    const task = { content: this.props.task.content, id: this.props.id };
+    this.props.deleteTask(task);
+  };
+
   render() {
     return (
-      <Item>
-        <Item.Content verticalAlign="bottom">
-          <Item.Header>{this.props.task.content}</Item.Header>
-          <Button floated="right" onClick={this.completeTask}>
-            Complete
+      <List.Item>
+        <List.Content floated="right">
+          <Button icon onClick={this.deleteTask}>
+            <Icon name="remove" />
           </Button>
-        </Item.Content>
-      </Item>
+          <Button icon onClick={this.completeTask}>
+            <Icon name="checkmark" />
+          </Button>
+        </List.Content>
+        <List.Content>{this.props.task.content}</List.Content>
+      </List.Item>
     );
   }
 }
 const mapDispatchToProps = dispatch => ({
   completeTask: task => {
     dispatch(completeTask(task));
+  },
+  deleteTask: task => {
+    dispatch(deleteTask(task));
   }
 });
 
