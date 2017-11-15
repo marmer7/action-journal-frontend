@@ -12,15 +12,18 @@ class EditJournal extends React.Component {
   }
 
   date = () => {
-    return this.props.editors[this.props.currentEditorId].createdAt.slice(
-      0,
-      10
-    );
+    if (this.props.currentEditorId) {
+      return this.props.editors[this.props.currentEditorId].createdAt.slice(
+        0,
+        10
+      );
+    }
+    return null;
   };
   render() {
     return (
       <div className="edit-journal">
-        <AppEditor />
+        <AppEditor date={this.date()} print={true} />
       </div>
     );
   }

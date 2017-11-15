@@ -24,7 +24,7 @@ class TaskList extends React.Component {
   };
   render() {
     return (
-      <List divided verticalAlign="middle">
+      <List divided size="large" verticalAlign="middle">
         {this.renderTasks()}
       </List>
     );

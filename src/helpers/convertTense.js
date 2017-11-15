@@ -117,7 +117,6 @@ export default class ConvertTense {
       sing: "sang",
       sink: "sank",
       sit: "sat",
-      slay: "slew",
       sleep: "slept",
       slide: "slid",
       sling: "slung",
@@ -180,30 +179,24 @@ export default class ConvertTense {
       return this.exceptions[this.verb];
     }
     if (/e$/i.test(this.verb)) {
-      console.log("1");
       return this.verb + "d";
     }
     if (/[aeiou]c/i.test(this.verb)) {
-      console.log("2");
       return this.verb + "ed";
     }
     if (/el$/i.test(this.verb)) {
-      console.log("3");
       return this.verb + "ed";
     }
     if (/[aeio][aeriou][dlmnprst]$/.test(this.verb)) {
-      console.log("4");
       return this.verb + "ed";
     }
     if (/[aeiou][a-z]*[aeiou][bdglmnprst]$/i.test(this.verb)) {
       return this.verb + "ed";
     }
     if (/[aeiou][bdglmnprst]$/i.test(this.verb)) {
-      console.log("5");
       return this.verb.replace(/(\w+[aeiou])([bdglmnprst])/, "$1$2$2ed");
     }
     if (/[a-z]*[^ao]y$/i.test(this.verb)) {
-      console.log("6");
       return this.verb.replace(/(.*)y/, "$1ied");
     }
     return this.verb + "ed";

@@ -41,6 +41,7 @@ class NewTaskForm extends React.Component {
             }
             value={this.state.content}
             onChange={this.onChange}
+            autoComplete="off"
             name="content"
           />
         </form>

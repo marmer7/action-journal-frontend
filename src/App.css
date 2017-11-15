@@ -132,3 +132,12 @@
   display: flex;
   justify-content: center;
 }
+
+.print-menu {
+  float: right;
+  text-align: right;
+}
+
+.print-button {
+  cursor: pointer;
+}

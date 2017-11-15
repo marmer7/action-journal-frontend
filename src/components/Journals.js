@@ -5,15 +5,30 @@ import JournalItem from "./JournalItem";
 
 class Journals extends React.Component {
   renderJournals = () => {
-    return this.props.editors.allIds.map(id => {
-      return (
-        <JournalItem
-          id={id}
-          key={id}
-          date={this.props.editors.byId[id].createdAt}
-        />
-      );
-    });
+    return this.props.editors.allIds
+      .sort((idA, idB) => {
+        if (
+          this.props.editors.byId[idA].createdAt <
+          this.props.editors.byId[idB].createdAt
+        ) {
+          return 1;
+        } else if (
+          this.props.editors.byId[idA].createdAt >
+          this.props.editors.byId[idB].createdAt
+        ) {
+          return -1;
+        }
+        return 0;
+      })
+      .map(id => {
+        return (
+          <JournalItem
+            id={id}
+            key={id}
+            date={this.props.editors.byId[id].createdAt}
+          />
+        );
+      });
   };
 
   componentDidMount() {
@@ -23,15 +38,7 @@ class Journals extends React.Component {
   }
 
   render() {
-    return (
-      <div className="journals-container">
-        {this.renderJournals()}
-        <div className="journal-item">DATE</div>
-        <div className="journal-item">DATE</div>
-        <div className="journal-item">DATE</div>
-        <div className="journal-item">DATE</div>
-      </div>
-    );
+    return <div className="journals-container">{this.renderJournals()}</div>;
   }
 }
 

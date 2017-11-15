@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import AppContainer from "./components/AppContainer";
+import AppEditor from "./components/AppEditor";
 import EditJournal from "./components/EditJournal";
 import NavBar from "./components/NavBar";
 import Journals from "./components/Journals";
@@ -21,7 +22,7 @@ class App extends Component {
         <Switch>
           <Route exact path="/" component={AppContainer} />
           <Route exact path="/journals" component={Journals} />
-          <Route path="/journals/:id" component={EditJournal} />
+          <Route exact path="/journals/:id" component={EditJournal} />
           <Redirect to="/" />
         </Switch>
       </div>

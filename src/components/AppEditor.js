@@ -5,6 +5,7 @@ import { Editor, RichUtils } from "draft-js";
 import { updateEditor } from "../actions/editor"; // actions
 import { uncompleteTask } from "../actions/task"; // actions
 import BlockStyleControls from "./BlockStyleControls";
+import InlineStyleControls from "./InlineStyleControls";
 import { Container } from "semantic-ui-react";
 import { saveContent } from "../helpers/fetches";
 
@@ -44,15 +45,26 @@ class AppEditor extends React.Component {
       command
     );
     if (newState) {
-      this.props.onSaveEditorState(newState, this.props.currentEditorId);
+      this.onChange(newState, this.props.currentEditorId);
       return "handled";
     }
     return "not-handled";
   };
 
+  // handleBeforeInput = chars => {
+  //   console.log(chars);
+  //   return "handled";
+  // };
+
   toggleBlockType = blockType => {
     this.onChange(
       RichUtils.toggleBlockType(this.currentEditorState(), blockType)
+    );
+  };
+
+  toggleInlineStyle = inlineStyle => {
+    this.onChange(
+      RichUtils.toggleInlineStyle(this.currentEditorState(), inlineStyle)
     );
   };
 
@@ -81,9 +93,26 @@ class AppEditor extends React.Component {
       <Container className="editor-root">
         {this.props.editors.byId[this.props.currentEditorId] ? (
           <div>
+            {this.props.print ? (
+              <div className="print-menu">
+                <div>{this.props.date}</div>
+                <a
+                  onClick={function() {
+                    window.print();
+                  }}
+                  className="print-button"
+                >
+                  Print
+                </a>
+              </div>
+            ) : null}
             <BlockStyleControls
               editorState={this.currentEditorState()}
               onToggle={this.toggleBlockType}
+            />
+            <InlineStyleControls
+              editorState={this.currentEditorState()}
+              onToggle={this.toggleInlineStyle}
             />
             <div className="editor" onClick={this.focus}>
               <Editor
